@@ -11,20 +11,24 @@ using namespace std;
 class AvlTree {
 
 private:
-
     struct Node {
         const int key;
+        int balance;
         Node *left = nullptr;
         Node *right = nullptr;
-        Node(const int);
-        Node(const int, Node *, Node *);
+        Node *previous = nullptr;
+
+        Node(const int, int);
+        Node(const int, int, Node *, Node *, Node *);
         ~Node();
-        bool search(const int) const;
-        void insert(const int);
-        Node *remove(const int);
+
         vector<int> *preorder() const; // (Hauptreihenfolge)
         vector<int> *inorder() const; // (Symmetrische Reihenfolge)
         vector<int> *postorder() const; // (Nebenreihenfolge)
+
+        bool search(const int) const;
+        void insert(const int);
+        Node *remove(const int);
     };
 
     Node *root = nullptr;
@@ -32,6 +36,10 @@ private:
 public:
 
     ~AvlTree();
+
+    void balanceIt(Node *);
+
+    int height();
 
     bool search(const int) const;
 
