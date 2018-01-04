@@ -37,7 +37,9 @@ public:
 
     ~AvlTree();
 
-    void balanceIt(Node *);
+    void upIn(Node *);
+
+    void upOut(Node *);
 
     int height();
 
@@ -45,7 +47,17 @@ public:
 
     void insert(const int);
 
+    void insert(const int, Node *);
+
     void remove(const int);
+
+    void remove(const int, Node *);
+
+    void removeNodeBothLeafs(Node *);
+
+    void rotateRight(Node *);
+
+    void rotateLeft(Node *);
 
     vector<int> *preorder() const; // (Hauptreihenfolge)
     vector<int> *inorder() const; // (Symmetrische Reihenfolge)
