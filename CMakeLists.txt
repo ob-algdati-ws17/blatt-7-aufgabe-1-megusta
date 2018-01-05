@@ -1,12 +1,9 @@
-cmake_minimum_required(VERSION 3.7)
+cmake_minimum_required(VERSION 3.2)
 project(AvlTree)
 
 set(CMAKE_CXX_STANDARD 11)
 
 add_subdirectory(avltree)
-
-
-target_link_libraries(Main LINK_PUBLIC avltree)
 
 # GoogleTest
 
@@ -37,4 +34,4 @@ add_subdirectory(test)
 
 enable_testing()
 
-add_test(testAvlTree test/testAvlTree --gtest_output=xml:report.xml)
+add_test(testList test/testAVLTree --gtest_output=xml:report.xml)
