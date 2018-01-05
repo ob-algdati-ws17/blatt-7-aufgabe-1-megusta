@@ -272,9 +272,9 @@ void AvlTree::removeNodeTwoChilds(Node * node){
     while(symPost->left != nullptr){
         symPost = symPost->left;
     }
-    int nodeKey = nodeKey;
+
     node->key = symPost->key;
-    symPost->key = nodeKey;
+
 
     if(symPost->left == nullptr && symPost->right == nullptr){
         removeNodeNoChilds(symPost);
