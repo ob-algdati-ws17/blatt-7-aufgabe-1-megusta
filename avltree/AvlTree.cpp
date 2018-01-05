@@ -163,7 +163,16 @@ void AvlTree::remove(const int value){
 void AvlTree::remove(const int value, Node *node){
     if(node->key == value){
         if(node->left == nullptr && node->right == nullptr){
-            removeNodeBothLeafs(node);
+            removeNodeNoChilds(node);
+        }
+        else if(node->left != nullptr && node->right == nullptr){
+            removeNodeOneChild(node);
+        }
+        else if(node->right != nullptr && node->left == nullptr){
+            removeNodeOneChild(node);
+        }
+        else if(node->right != nullptr && node->left != nullptr){
+            removeNodeTwoChilds(node);
         }
     }else if(node->key > value){
         remove(value,node->left);
@@ -172,7 +181,7 @@ void AvlTree::remove(const int value, Node *node){
     }
 }
 
-void AvlTree::removeNodeBothLeafs(Node * removeNode) {
+void AvlTree::removeNodeNoChilds(Node * removeNode) {
     auto previous = removeNode->previous;
 
     if(previous != nullptr){
@@ -223,15 +232,55 @@ void AvlTree::removeNodeBothLeafs(Node * removeNode) {
                 upOut(previous->previous);
             }
         }
-
-
-
-
     }
     else{
         root = nullptr;
     }
     delete removeNode;
+}
+
+
+void AvlTree::removeNodeOneChild(Node * node){
+    auto previous = node->previous;
+    // leaf is left
+    if(node->left != nullptr){
+        auto child = node->left;
+        node->key = child->key;
+        node->left = nullptr;
+        node->balance = 0;
+        if(previous != nullptr){
+            upOut(node);
+        }
+        delete child;
+    }
+    // leaf is right
+    else{
+        auto child = node->right;
+        node->key = child->key;
+        node->right = nullptr;
+        node->balance = 0;
+        if(previous != nullptr){
+            upOut(node);
+        }
+        delete child;
+    }
+}
+
+void AvlTree::removeNodeTwoChilds(Node * node){
+
+    auto symPost = node->right;
+    while(symPost->left != nullptr){
+        symPost = symPost->left;
+    }
+    int nodeKey = nodeKey;
+    node->key = symPost->key;
+    symPost->key = nodeKey;
+
+    if(symPost->left == nullptr && symPost->right == nullptr){
+        removeNodeNoChilds(symPost);
+    }else{
+        removeNodeOneChild(symPost);
+    }
 }
 
 

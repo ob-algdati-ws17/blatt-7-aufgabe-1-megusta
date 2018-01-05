@@ -97,5 +97,18 @@ TEST(AvlTreeTest, Remove_Root) {
     EXPECT_EQ(nullptr, a.postorder());
 }
 
+TEST(AvlTreeTest, Remove_Leaf) {
+    AvlTree a;
+    a.insert(10);
+    a.insert(12);
+    a.insert(8);
+    a.insert(7);
+    a.insert(9);
+    a.remove(8);
+    EXPECT_EQ(nullptr, a.preorder());
+    EXPECT_EQ(nullptr, a.inorder());
+    EXPECT_EQ(nullptr, a.postorder());
+}
+
 
 

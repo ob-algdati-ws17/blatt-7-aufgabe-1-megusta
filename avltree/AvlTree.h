@@ -12,7 +12,7 @@ class AvlTree {
 
 private:
     struct Node {
-        const int key;
+        int key;
         int balance;
         Node *left = nullptr;
         Node *right = nullptr;
@@ -53,7 +53,11 @@ public:
 
     void remove(const int, Node *);
 
-    void removeNodeBothLeafs(Node *);
+    void removeNodeNoChilds(Node *);
+
+    void removeNodeOneChild(Node *);
+
+    void removeNodeTwoChilds(Node *);
 
     void rotateRight(Node *);
 
