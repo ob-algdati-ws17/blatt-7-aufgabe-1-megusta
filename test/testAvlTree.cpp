@@ -4,14 +4,14 @@
 using namespace std;
 
 // empty tree
-/*
+
 TEST(AvlTreeTest, Empty_Tree) {
     AvlTree a;
     EXPECT_EQ(nullptr, a.preorder());
     EXPECT_EQ(nullptr, a.inorder());
     EXPECT_EQ(nullptr, a.postorder());
 }
-
+/*
 TEST(AvlTreeTest, One_Node) {
     AvlTree a;
     a.insert(15);
@@ -80,7 +80,7 @@ TEST(AvlTreeTest, Three_Nodes_Balance_Both) {
     a.insert(18);
     a.insert(19);
     EXPECT_EQ(0,a.height());
-}*/
+}
 
 TEST(AvlTreeTest, Remove_Root) {
     AvlTree a;
@@ -112,3 +112,4 @@ TEST(AvlTreeTest, Remove_Leaf) {
 
 
 
+*/
