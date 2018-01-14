@@ -1,115 +1,303 @@
 #include "testAvlTree.h"
-#include <memory>
 
 using namespace std;
 
-// empty tree
-
-TEST(AvlTreeTest, Empty_Tree) {
-    AvlTree a;
-    EXPECT_EQ(nullptr, a.preorder());
-    EXPECT_EQ(nullptr, a.inorder());
-    EXPECT_EQ(nullptr, a.postorder());
+TEST(AvlTreeTest, Test_EmptyTree) {
+    AvlTree tree;
+    EXPECT_EQ(nullptr, tree.inorder());
+    EXPECT_EQ(nullptr, tree.preorder());
+    EXPECT_EQ(nullptr, tree.postorder());
 }
-/*
-TEST(AvlTreeTest, One_Node) {
-    AvlTree a;
-    a.insert(15);
-    EXPECT_TRUE(a.search(15));
-    EXPECT_FALSE(a.search(-15));
-    EXPECT_FALSE(a.search(16));
-    EXPECT_THAT(*a.preorder(), testing::ElementsAre(15));
-    EXPECT_THAT(*a.inorder(), testing::ElementsAre(15));
-    EXPECT_THAT(*a.postorder(), testing::ElementsAre(15));
+
+TEST(AvlTreeTest, Test_OneValue) {
+    AvlTree tree;
+    tree.insert(1);
+    EXPECT_TRUE(tree.search(1));
+    EXPECT_THAT(*tree.inorder(), testing::ElementsAre(1));
+    EXPECT_THAT(*tree.preorder(), testing::ElementsAre(1));
+    EXPECT_THAT(*tree.postorder(), testing::ElementsAre(1));
 
 }
 
-TEST(AvlTreeTest, Two_Nodes) {
-    AvlTree a;
-    a.insert(12213);
-    a.insert(215);
-    EXPECT_TRUE(a.search(12213));
-    EXPECT_TRUE(a.search(215));
-    EXPECT_THAT(*a.preorder(), testing::ElementsAre(12213, 215));
-    EXPECT_THAT(*a.inorder(), testing::ElementsAre(215, 12213));
-    EXPECT_THAT(*a.postorder(), testing::ElementsAre(215, 12213));
+TEST(AvlTreeTest, Test_TwoValues) {
+    AvlTree tree;
+    tree.insert(1);
+    tree.insert(2);
+    EXPECT_TRUE(tree.search(1));
+    EXPECT_TRUE(tree.search(2));
+    EXPECT_THAT(*tree.inorder(), testing::ElementsAre(1, 2));
+    EXPECT_THAT(*tree.preorder(), testing::ElementsAre(1, 2));
+    EXPECT_THAT(*tree.postorder(), testing::ElementsAre(2, 1));
+    EXPECT_THAT(tree.height(), 1);
 }
 
-TEST(AvlTreeTest, Three_Nodes) {
-    AvlTree a;
-    a.insert(12213);
-    a.insert(215);
-    a.insert(123712);
-    EXPECT_TRUE(a.search(12213));
-    EXPECT_TRUE(a.search(123712));
-    EXPECT_TRUE(a.search(215));
-    EXPECT_THAT(*a.preorder(), testing::ElementsAre(12213, 215, 123712));
-    EXPECT_THAT(*a.inorder(), testing::ElementsAre(215, 12213, 123712));
-    EXPECT_THAT(*a.postorder(), testing::ElementsAre(215, 123712, 12213));
+TEST(AvlTreeTest, Test_Rotate_Right) {
+    AvlTree tree;
+    tree.insert(3);
+    tree.insert(2);
+    tree.insert(1);
+    EXPECT_TRUE(tree.search(1));
+    EXPECT_TRUE(tree.search(2));
+    EXPECT_TRUE(tree.search(3));
+    EXPECT_THAT(*tree.inorder(), testing::ElementsAre(1, 2, 3));
+    EXPECT_THAT(*tree.preorder(), testing::ElementsAre(2, 1, 3));
+    EXPECT_THAT(*tree.postorder(), testing::ElementsAre(1, 3, 2));
+    EXPECT_THAT(tree.height(), 0);
 }
 
-TEST(AvlTreeTest, Three_Nodes_Balance) {
-    AvlTree a;
-    a.insert(20);
-    a.insert(18);
-    a.insert(16);
-    EXPECT_EQ(0,a.height());
+TEST(AvlTreeTest, Test_Rotate_Left) {
+    AvlTree tree;
+    tree.insert(1);
+    tree.insert(2);
+    tree.insert(3);
+    EXPECT_TRUE(tree.search(1));
+    EXPECT_TRUE(tree.search(2));
+    EXPECT_TRUE(tree.search(3));
+    EXPECT_THAT(*tree.inorder(), testing::ElementsAre(1, 2, 3));
+    EXPECT_THAT(*tree.preorder(), testing::ElementsAre(2, 1, 3));
+    EXPECT_THAT(*tree.postorder(), testing::ElementsAre(1, 3, 2));
+    EXPECT_THAT(tree.height(), 0);
 }
 
-TEST(AvlTreeTest, Four_Nodes_Balance_Right) {
-    AvlTree a;
-    a.insert(20);
-    a.insert(19);
-    a.insert(18);
-    a.insert(16);
-    EXPECT_EQ(-1,a.height());
+TEST(AvlTreeTest, Test_Rotate_RightLeft) {
+    AvlTree tree;
+    tree.insert(1);
+    tree.insert(3);
+    tree.insert(2);
+    EXPECT_TRUE(tree.search(1));
+    EXPECT_TRUE(tree.search(2));
+    EXPECT_TRUE(tree.search(3));
+    EXPECT_THAT(*tree.inorder(), testing::ElementsAre(1, 2, 3));
+    EXPECT_THAT(*tree.preorder(), testing::ElementsAre(2, 1, 3));
+    EXPECT_THAT(*tree.postorder(), testing::ElementsAre(1, 3, 2));
+    EXPECT_THAT(tree.height(), 0);
 }
 
-TEST(AvlTreeTest, Four_Nodes_Balance_Left) {
-    AvlTree a;
-    a.insert(16);
-    a.insert(18);
-    a.insert(20);
-    a.insert(22);
-    EXPECT_EQ(1,a.height());
-}
-
-TEST(AvlTreeTest, Three_Nodes_Balance_Both) {
-    AvlTree a;
-    a.insert(20);
-    a.insert(18);
-    a.insert(19);
-    EXPECT_EQ(0,a.height());
-}
-
-TEST(AvlTreeTest, Remove_Root) {
-    AvlTree a;
-    a.insert(15);
-    a.insert(12);
-    a.insert(18);
-    a.insert(20);
-    a.insert(8);
-    a.insert(13);
-    a.insert(10);
-    a.remove(13);
-    EXPECT_EQ(nullptr, a.preorder());
-    EXPECT_EQ(nullptr, a.inorder());
-    EXPECT_EQ(nullptr, a.postorder());
-}
-
-TEST(AvlTreeTest, Remove_Leaf) {
-    AvlTree a;
-    a.insert(10);
-    a.insert(12);
-    a.insert(8);
-    a.insert(7);
-    a.insert(9);
-    a.remove(8);
-    EXPECT_EQ(nullptr, a.preorder());
-    EXPECT_EQ(nullptr, a.inorder());
-    EXPECT_EQ(nullptr, a.postorder());
+TEST(AvlTreeTest, Test_Rotate_LeftRight) {
+    AvlTree tree;
+    tree.insert(3);
+    tree.insert(1);
+    tree.insert(2);
+    EXPECT_TRUE(tree.search(1));
+    EXPECT_TRUE(tree.search(2));
+    EXPECT_TRUE(tree.search(3));
+    EXPECT_THAT(*tree.inorder(), testing::ElementsAre(1, 2, 3));
+    EXPECT_THAT(*tree.preorder(), testing::ElementsAre(2, 1, 3));
+    EXPECT_THAT(*tree.postorder(), testing::ElementsAre(1, 3, 2));
+    EXPECT_THAT(tree.height(), 0);
 }
 
 
+TEST(AvlTreeTest, Test_Remove_One_Then_Empty) {
+    AvlTree tree;
+    tree.insert(1);
+    tree.remove(1);
+    EXPECT_EQ(nullptr, tree.inorder());
+    EXPECT_EQ(nullptr, tree.preorder());
+    EXPECT_EQ(nullptr, tree.postorder());
+}
 
-*/
+TEST(AvlTreeTest, Test_Remove_One_Then_One_Left) {
+    AvlTree tree;
+    tree.insert(1);
+    tree.insert(2);
+    tree.remove(2);
+    EXPECT_THAT(*tree.inorder(), testing::ElementsAre(1));
+    EXPECT_THAT(*tree.preorder(), testing::ElementsAre(1));
+    EXPECT_THAT(*tree.postorder(), testing::ElementsAre(1));
+    EXPECT_THAT(tree.height(), 0);
+}
+
+TEST(AvlTreeTest, Test_Remove_Without_Child_Without_Rotation) {
+    AvlTree tree;
+    tree.insert(1);
+    tree.insert(2);
+    tree.insert(3);
+    tree.remove(3);
+    EXPECT_THAT(*tree.inorder(), testing::ElementsAre(1, 2));
+    EXPECT_THAT(*tree.preorder(), testing::ElementsAre(2, 1));
+    EXPECT_THAT(*tree.postorder(), testing::ElementsAre(1, 2));
+    EXPECT_THAT(tree.height(), -1);
+}
+
+TEST(AvlTreeTest, Test_Remove_Without_Child_RightLeft_Rotation) {
+    AvlTree tree;
+    tree.insert(40);
+    tree.insert(30);
+    tree.insert(50);
+    tree.insert(45);
+    tree.remove(30);
+    EXPECT_THAT(*tree.inorder(), testing::ElementsAre(40, 45, 50));
+    EXPECT_THAT(*tree.preorder(), testing::ElementsAre(45, 40, 50));
+    EXPECT_THAT(*tree.postorder(), testing::ElementsAre(40, 50, 45));
+    EXPECT_THAT(tree.height(), 0);
+}
+
+TEST(AvlTreeTest, Test_Remove_Without_Child_Left_Rotation) {
+    AvlTree tree;
+    tree.insert(40);
+    tree.insert(30);
+    tree.insert(50);
+    tree.insert(55);
+    tree.remove(30);
+    EXPECT_THAT(*tree.inorder(), testing::ElementsAre(40, 50, 55));
+    EXPECT_THAT(*tree.preorder(), testing::ElementsAre(50, 40, 55));
+    EXPECT_THAT(*tree.postorder(), testing::ElementsAre(40, 55, 50));
+    EXPECT_THAT(tree.height(), 0);
+}
+
+TEST(AvlTreeTest, Test_Remove_Without_Child_LeftRight_Rotation) {
+    AvlTree tree;
+    tree.insert(40);
+    tree.insert(30);
+    tree.insert(50);
+    tree.insert(35);
+    tree.remove(50);
+    EXPECT_THAT(*tree.inorder(), testing::ElementsAre(30, 35, 40));
+    EXPECT_THAT(*tree.preorder(), testing::ElementsAre(35, 30, 40));
+    EXPECT_THAT(*tree.postorder(), testing::ElementsAre(30, 40, 35));
+    EXPECT_THAT(tree.height(), 0);
+}
+
+TEST(AvlTreeTest, Test_Remove_Without_Child_Right_Rotation) {
+    AvlTree tree;
+    tree.insert(40);
+    tree.insert(30);
+    tree.insert(50);
+    tree.insert(25);
+    tree.remove(50);
+    EXPECT_THAT(*tree.inorder(), testing::ElementsAre(25, 30, 40));
+    EXPECT_THAT(*tree.preorder(), testing::ElementsAre(30, 25, 40));
+    EXPECT_THAT(*tree.postorder(), testing::ElementsAre(25, 40, 30));
+    EXPECT_THAT(tree.height(), 0);
+}
+
+TEST(AvlTreeTest, Test_Remove_Without_Child_Final) {
+    AvlTree tree;
+    tree.insert(20);
+    tree.insert(10);
+    tree.insert(25);
+    tree.insert(5);
+    tree.insert(14);
+    tree.insert(26);
+    tree.insert(12);
+    tree.remove(26);
+    EXPECT_THAT(*tree.inorder(), testing::ElementsAre(5, 10, 12, 14, 20, 25));
+    EXPECT_THAT(*tree.preorder(), testing::ElementsAre(14, 10, 5, 12, 20, 25));
+    EXPECT_THAT(*tree.postorder(), testing::ElementsAre(5, 12, 10, 25, 20, 14));
+    EXPECT_THAT(tree.height(), 0);
+}
+
+
+TEST(AvlTreeTest, Test_Remove_With_One_Child_Right_Left) {
+    AvlTree tree;
+    tree.insert(10);
+    tree.insert(20);
+    tree.insert(30);
+    tree.insert(25);
+    tree.remove(30);
+    EXPECT_THAT(*tree.inorder(), testing::ElementsAre(10, 20, 25));
+    EXPECT_THAT(*tree.preorder(), testing::ElementsAre(20, 10, 25));
+    EXPECT_THAT(*tree.postorder(), testing::ElementsAre(10, 25, 20));
+    EXPECT_THAT(tree.height(), 0);
+}
+
+TEST(AvlTreeTest, Test_Remove_With_One_Child_Right_Right) {
+    AvlTree tree;
+    tree.insert(10);
+    tree.insert(20);
+    tree.insert(30);
+    tree.insert(35);
+    tree.remove(30);
+    EXPECT_THAT(*tree.inorder(), testing::ElementsAre(10, 20, 35));
+    EXPECT_THAT(*tree.preorder(), testing::ElementsAre(20, 10, 35));
+    EXPECT_THAT(*tree.postorder(), testing::ElementsAre(10, 35, 20));
+    EXPECT_THAT(tree.height(), 0);
+}
+
+TEST(AvlTreeTest, Test_Remove_With_One_Child_Left_Left) {
+    AvlTree tree;
+    tree.insert(10);
+    tree.insert(20);
+    tree.insert(30);
+    tree.insert(5);
+    tree.remove(10);
+    EXPECT_THAT(*tree.inorder(), testing::ElementsAre(5, 20, 30));
+    EXPECT_THAT(*tree.preorder(), testing::ElementsAre(20, 5, 30));
+    EXPECT_THAT(*tree.postorder(), testing::ElementsAre(5, 30, 20));
+    EXPECT_THAT(tree.height(), 0);
+}
+
+TEST(AvlTreeTest, Test_Remove_With_One_Child_Left_Right) {
+    AvlTree tree;
+    tree.insert(10);
+    tree.insert(20);
+    tree.insert(30);
+    tree.insert(15);
+    tree.remove(10);
+    EXPECT_THAT(*tree.inorder(), testing::ElementsAre(15, 20, 30));
+    EXPECT_THAT(*tree.preorder(), testing::ElementsAre(20, 15, 30));
+    EXPECT_THAT(*tree.postorder(), testing::ElementsAre(15, 30, 20));
+    EXPECT_THAT(tree.height(), 0);
+}
+
+
+TEST(AvlTreeTest, Test_Remove_With_Two_Childs_Root) {
+    AvlTree tree;
+    tree.insert(10);
+    tree.insert(20);
+    tree.insert(30);
+    tree.remove(20);
+    EXPECT_THAT(*tree.inorder(), testing::ElementsAre(10, 30));
+    EXPECT_THAT(*tree.preorder(), testing::ElementsAre(10, 30));
+    EXPECT_THAT(*tree.postorder(), testing::ElementsAre(30, 10));
+    EXPECT_THAT(tree.height(), 1);
+}
+
+TEST(AvlTreeTest, Test_Remove_With_Two_Childs_Right) {
+    AvlTree tree;
+    tree.insert(10);
+    tree.insert(20);
+    tree.insert(30);
+    tree.insert(25);
+    tree.insert(35);
+    tree.remove(30);
+    EXPECT_THAT(*tree.inorder(), testing::ElementsAre(10, 20, 25, 35));
+    EXPECT_THAT(*tree.preorder(), testing::ElementsAre(20, 10, 25, 35));
+    EXPECT_THAT(*tree.postorder(), testing::ElementsAre(10, 35, 25, 20));
+    EXPECT_THAT(tree.height(), 1);
+}
+
+TEST(AvlTreeTest, Test_Remove_With_Two_Childs_Left) {
+    AvlTree tree;
+    tree.insert(10);
+    tree.insert(20);
+    tree.insert(30);
+    tree.insert(5);
+    tree.insert(15);
+    tree.remove(10);
+    EXPECT_THAT(*tree.inorder(), testing::ElementsAre(5, 15, 20, 30));
+    EXPECT_THAT(*tree.preorder(), testing::ElementsAre(20, 5, 15, 30));
+    EXPECT_THAT(*tree.postorder(), testing::ElementsAre(15, 5, 30, 20));
+    EXPECT_THAT(tree.height(), -1);
+}
+
+TEST(AvlTreeTest, Test_Remove_With_Two_Childs_Final) {
+    AvlTree tree;
+    tree.insert(20);
+    tree.insert(15);
+    tree.insert(25);
+    tree.insert(21);
+    tree.insert(30);
+    tree.insert(10);
+    tree.insert(16);
+    tree.insert(18);
+    tree.remove(20);
+    EXPECT_THAT(*tree.inorder(), testing::ElementsAre(10, 15, 16, 18, 21, 25, 30));
+    EXPECT_THAT(*tree.preorder(), testing::ElementsAre(18, 15, 10, 16, 25, 21, 30));
+    EXPECT_THAT(*tree.postorder(), testing::ElementsAre(10, 16, 15, 21, 30, 25, 18));
+    EXPECT_THAT(tree.height(), 0);
+}
+
+
+
